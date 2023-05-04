@@ -7,7 +7,7 @@ matriz_x = []  #
 with open ("matriz.txt") as arquivo:
     num_matrizes = int(arquivo.readline())
     print("Temos um total de :", num_matrizes, "matrizes" )
-    print("Divididas em A , B , C e D !!")
+    print("Divididas em A , B , C e D !!", '\n')
     nomenclatura = 'ABCDEFGHIJKLMNOPQRSTUVWXYZ'
 
     matrizes = []
@@ -17,22 +17,22 @@ with open ("matriz.txt") as arquivo:
     for chamado in range(num_matrizes):
         limM, colM = arquivo.readline().strip().split(';')
 
-        m = []
+        listADD = []
         for i in range(int(limM)):#percorrerá o número de linhas
             elementos = arquivo.readline().strip().split(',')
-            m.append(elementos)#adicionará os elementos na lista auxiliar
-        matriz = np.array(m, dtype=float) #reaizando uma coversão em um array numpy de floats(temos que fazer isso para criar matrizes e realizar operações)
-        print('A matriz', nomenclatura[chamado], 'possui os seguintes valores: \n', '=-=-=-=-=-=-=-=-=-= \n', matriz, '\n =-=-=-=-=-=-=-=-=-= ')
+            listADD.append(elementos)#ADD ELEMENTOS NA LISTA X
+        matriz = np.array(listADD, dtype=float) #reaizando uma coversão em um array numpy de floats(temos que fazer isso para criar matrizes e realizar operações)
+        print('A matriz', nomenclatura[chamado], 'possui os seguintes valores: \n', '=-=-=-=-=-=-=-=-=-=-=-=-= \n', matriz, '\n =-=-=-=-=-=-=-=-=-=-=-=-= ')
         if matriz.shape[0] == matriz.shape[1]: #caso o número de linhas seja o mesmo número de colunas
             determinante = np.linalg.det(matriz) #descobrindo o determinante atraves do comando linalg (python sempre sendo bom com a gente)
             print('A matriz', nomenclatura[chamado], 'tem como determinante:', determinante)
             if determinante == 0:
                 print('A matriz', nomenclatura[chamado], 'apresenta um determinante igual a zero, assim não é possível calcular a inversa')
             else:
-                print('A matriz', nomenclatura[chamado], 'apresenta sua inversa igual a: \n \n', np.linalg.inv(matriz))
+                print('A matriz', nomenclatura[chamado], 'apresenta sua inversa igual a: \n \n', np.linalg.inv(matriz), '\n')
         else:
             print('Não podemos calcular o determinante de', nomenclatura[chamado])
-            print('Não podemos calcular a inversa de', nomenclatura[chamado])
+            print('Não podemos calcular a inversa de', nomenclatura[chamado], '\n')
 
         matrizes.append(matriz) #adção da matriz apos sua conversão
         matriz_x.append(nomenclatura[chamado]) #contabilizando e tendo controle das matrizes que já foram
