@@ -1,57 +1,45 @@
-import numpy as np
-from numpy.linalg import det, inv #biblioteca para operações nas matrizes
-from colorama import Fore, Style #deixa mais organizado e esteticamene agradavel
+import numpy as np #IMPORTA A BIBLIOTECA
+from numpy.linalg import det,inv #FAZ AS OPERACOES
 
-print(Fore.RED, "------ATENÇÃO----- \n", Style.RESET_ALL,  "Cada cor representa um resultado")
-print(Fore.RED, "Respresenta o número de matrizes totais", Style.RESET_ALL)
-print(Fore.GREEN, "Represenra o número de linhas e colunas", Style.RESET_ALL)
-print(Fore.BLUE, "Representa o nome e os elementos das matrizes", Style.RESET_ALL)
-print(Fore.YELLOW, "Representa caso não seja possível calcular a inversa da matriz", Style.RESET_ALL)
-print(Fore.MAGENTA, "Representa se o determinante da matriz",Style.RESET_ALL)
-print(Fore.LIGHTYELLOW_EX, "Representa quando não é possível calcular a inversa, pois det=0",Style.RESET_ALL)
-print(Fore.LIGHTBLUE_EX, "Representa quando não é possível calcular o determinante",Style.RESET_ALL)
-print(Fore.LIGHTRED_EX, "Represena quando não é possível multiplicar as matrizes",Style.RESET_ALL)
-print(Fore.LIGHTMAGENTA_EX, "Representa o resultado de uma multiplicação \n \n \n",Style.RESET_ALL)
+matrizes = []  #LISTA COM INFORMACOES DAS MATRIZES
+matriz_nome = []  #NOME DA MATRIZ
 
-with open("matriz.txt") as arquivo: #abrindo um arquivo com as infos
-    num_matrizes = int(arquivo.readline()) #quantidade de matrizes no total, num=número
-    print(Fore.RED + "O número de matrizes é", num_matrizes,":" + Style.RESET_ALL)
-    nomenclatura = 'ABCDEFGHIJKLMNOPQRSTUVWXYZ' #nome que cada matriz irá receber
-    
-    matrizes = [] #lista que irá ser preenchida com as infos das matrizes
-    matriz_x = []#aqui será o nome da matriz, para saber a letra que setá colocada (x é o número)
-    
-    linha = 1#definir a linhas que o for vai começar 
-    for chamado in range(num_matrizes):#vai analizar de acordo com o número de matrizes totais
+with open ("matriz.txt") as arquivo:
+    num_matrizes = int(arquivo.readline())
+    print("Temos um total de :", num_matrizes, "matrizes" )
+    print("Divididas em A , B , C e D !!", '\n')
+    alfabeto = 'ABCDEFGHIJKLMNOPQRSTUVWXYZ' #PARA IDENTIFICAR A MATRIZ
+
+    linha = 1
+    for chamado in range(num_matrizes):
         limM, colM = arquivo.readline().strip().split(';')
-        print(Fore.GREEN + "O número de linhas e colunas da matriz", nomenclatura[chamado], "é:", limM, "-", colM + ":", Style.RESET_ALL)
 
-        m = [] #lista auxliar
-        for i in range(int(limM)):#percorrerá o número de linhas
+        listADD = []
+        for i in range(int(limM)): #PERCORRE AS LINHAS
             elementos = arquivo.readline().strip().split(',')
-            m.append(elementos)#adicionará os elementos na lista auxiliar
-        matriz = np.array(m, dtype=float) #reaizando uma coversão em um array numpy de floats(temos que fazer isso para criar matrizes e realizar operações)
-        print(Fore.BLUE, 'Temos a matriz', nomenclatura[chamado], 'com os seguintes valores: \n', '-------------------- \n', matriz, '--------------------' + Style.RESET_ALL)
-        if matriz.shape[0] == matriz.shape[1]: #caso o número de linhas seja o mesmo número de colunas
-            determinante = np.linalg.det(matriz) #descobrindo o determinante atraves do comando linalg (python sempre sendo bom com a gente)
-            print(Fore.MAGENTA, 'a matriz', nomenclatura[chamado], 'tem como determinsnte:', determinante, Style.RESET_ALL)
+            listADD.append(elementos) #ADD ELEMENTOS NA LISTA X
+        matriz = np.array(listADD, dtype=float) #CRIA AS MATRIZES
+        print('A matriz', alfabeto[chamado], 'possui os seguintes valores: \n', '=-=-=-=-=-=-=-=-=-=-=-=-= \n', matriz, '\n =-=-=-=-=-=-=-=-=-=-=-=-= ')
+        if matriz.shape[0] == matriz.shape[1]: #VERIFICA SE O NUMERO DE LINHAS == COLUNAS
+            determinante = np.linalg.det(matriz) # O NUMPY POSSUI O LINANG QUE DESCOBRE O DETERMINANTE DA MATRIZ
+            print('A matriz', alfabeto[chamado], 'tem como determinante:', determinante)
             if determinante == 0:
-                print(Fore.LIGHTYELLOW_EX, 'a', nomenclatura[chamado], 'apresenta um determinante igual a zero, assim não é possível calcular a inversa', Style.RESET_ALL)
+                print('A matriz', alfabeto[chamado], 'possui determinante igual a zero, assim não é possível calcular a inversa')
             else:
-                print(Fore.CYAN, 'a matriz', nomenclatura[chamado], 'apresenta sua inversão sendo igual a', np.linalg.inv(matriz), Style.RESET_ALL)
+                print('A matriz', alfabeto[chamado], 'possui sua inversa igual a: \n \n', np.linalg.inv(matriz), '\n')
         else:
-            print(Fore.LIGHTBLUE_EX, 'Não é possível calcular o determinante de', nomenclatura[chamado], Style.RESET_ALL)
-            print(Fore.YELLOW, 'Não é possível calcular a inversa de', nomenclatura[chamado], Style.RESET_ALL)
+            print('Não podemos calcular o determinante de', alfabeto[chamado])
+            print('Não podemos calcular a inversa de', alfabeto[chamado], '\n')
 
-        matrizes.append(matriz) #adção da matriz apos sua conversão
-        matriz_x.append(nomenclatura[chamado]) #contabilizando e tendo controle das matrizes que já foram
-        linha += 1#indo pra proxima linha
+        matrizes.append(matriz)#CONTABILIZADA AS MATRIZES QUE FORAM
+        matriz_nome.append(alfabeto[chamado]) #MATRIZES QUE JA FORAM
+        linha += 1#PROX LINHA
 
     for i in range(num_matrizes - 1):
-        if matrizes[i].shape[1] == matrizes[i+1].shape[0]: #caso as matrizes sejam possíveis de serem multiplicadas, seus resultados serão armazenados numa variável auxiliar
+        if matrizes[i].shape[1] == matrizes[i+1].shape[0]: #VERIFICA SE AS MATRIZES PODEM SER MULTIPLICADAS
             resultado = np.dot(matrizes[i], matrizes[i+1])
-            matriz_x.append(matriz_x[i] + matriz_x[i+1])
+            matriz_nome.append(matriz_nome[i] + matriz_nome[i+1])
             matrizes.append(resultado)
-            print(Fore.GREEN, 'A multiplicação das matrizes', matriz_x[i], 'e', matriz_x[i+1], 'resultou na matriz', matriz_x[i] + matriz_x[i+1], '\n', '-------------------- \n', resultado, '--------------------' + Style.RESET_ALL)
+            print('A multiplicação das matrizes', matriz_nome[i], 'e', matriz_nome[i+1], 'é igual a: ', matriz_nome[i] + matriz_nome[i+1], '\n', '=-=-=-=-=-=-=-=-=-=-=-=-= \n', resultado, '=-=-=-=-=-=-=-=-=-=-=-=-=') #RESULTADO DAS MATRIZES
         else:
-            print(Fore.LIGHTRED_EX, 'Não foi possível multiplicar as matrizes', matriz_x[i], 'e', matriz_x[i+1], Style.RESET_ALL)
+            print('As matrizes', matriz_nome[i], 'e', matriz_nome[i+1], 'nao podem ser multiplicadas') #DEMONSTRA QUE AS MATRIZES EM QUESTAO NAO PODEM SER MULTIPLICADAS
